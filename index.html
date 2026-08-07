@@ -1,99 +1,164 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>4h MACD Scanner</title>
 <style>
 :root{color-scheme:light;--plane:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--axis:#c3c2b7;--ring:rgba(11,11,11,0.10);--blue:#2a78d6;--orange:#eb6834;--good:#0ca30c;--good-text:#006300;--crit:#d03b3b;--warn:#fab219}
-@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){color-scheme:dark;--plane:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--axis:#383835;--ring:rgba(255,255,255,0.10);--blue:#3987e5;--orange:#d95926;--good:#0ca30c;--good-text:#0ca30c;--crit:#e34948;--warn:#fab219}}
-*{box-sizing:border-box}body{margin:0;background:var(--plane);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45;-webkit-font-smoothing:antialiased;padding:24px 16px 56px}
-.wrap{max-width:940px;margin:0 auto}.num{font-variant-numeric:tabular-nums}h1{font-size:19px;margin:0 0 10px;letter-spacing:-.01em}
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--ring);margin-bottom:6px;flex-wrap:wrap}
-.tab{padding:9px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px}
-.tab.active{color:var(--ink);border-bottom-color:var(--blue)}.panel[hidden]{display:none}
-.sub{color:var(--ink2);font-size:13px;max-width:620px}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){color-scheme:dark;--plane:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--axis:#4a4a46;--ring:rgba(255,255,255,0.11);--blue:#3987e5;--orange:#e0763f;--good:#20c020;--good-text:#4fd24f;--crit:#e34948;--warn:#fab219}}
+*{box-sizing:border-box}body{margin:0;background:var(--plane);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45;-webkit-font-smoothing:antialiased;padding:20px 16px 60px}
+.wrap{max-width:1000px;margin:0 auto}.num{font-variant-numeric:tabular-nums}
+.sub{color:var(--ink2);font-size:13px;max-width:660px}
 .badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:4px 9px;border-radius:999px;background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--ink);border:1px solid var(--ring)}
 .rhead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin:12px 0 6px}.asof{color:var(--muted);font-size:12px;text-align:right;margin-top:6px}
-.card{background:var(--surface);border:1px solid var(--ring);border-radius:14px;padding:18px 20px}
-.hero{margin:14px 0;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}.hero .label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);width:100%}
-.hero .val{font-size:40px;font-weight:650;letter-spacing:-.02em}.hero .delta{font-size:16px;font-weight:600}
-.up{color:var(--good-text)}.down{color:var(--crit)}.flat{color:var(--ink2)}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:14px 0}
-.tile{background:var(--surface);border:1px solid var(--ring);border-radius:12px;padding:13px 15px}.tile .t{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:5px}
-.tile .v{font-size:21px;font-weight:620;letter-spacing:-.01em}.tile .v small{font-size:12px;font-weight:500;color:var(--ink2)}
-.sec{margin:24px 0 10px;font-size:13px;font-weight:650;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2)}
-.pos{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
-.pcard{background:var(--surface);border:1px solid var(--ring);border-radius:14px;padding:16px 18px}.prow{display:flex;justify-content:space-between;align-items:baseline}.sym{font-size:17px;font-weight:680}
-.trbadge{font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;margin-left:7px;background:color-mix(in srgb,var(--orange) 16%,transparent);color:var(--orange)}
-.pnl{font-size:15px;font-weight:640}.meta{color:var(--ink2);font-size:12.5px;margin-top:2px}
-.bar{position:relative;height:8px;border-radius:6px;margin:22px 0 6px;background:linear-gradient(90deg,color-mix(in srgb,var(--crit) 30%,var(--surface)),var(--grid),color-mix(in srgb,var(--good) 40%,var(--surface)))}
-.bar .now{position:absolute;top:-5px;width:3px;height:18px;border-radius:2px;background:var(--ink);transform:translateX(-50%)}
-.bar .avg{position:absolute;top:-3px;width:2px;height:14px;background:var(--muted);transform:translateX(-50%)}.bar .avg::after{content:"avg";position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-size:9.5px;color:var(--muted)}
-.barlab{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
-table{width:100%;border-collapse:collapse;font-size:13.5px}th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--grid)}
-th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}td.r,th.r{text-align:right}
-.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
-.buy{background:color-mix(in srgb,var(--blue) 16%,transparent);color:var(--blue)}.add{background:color-mix(in srgb,var(--orange) 16%,transparent);color:var(--orange)}
-.sell{background:color-mix(in srgb,var(--crit) 15%,transparent);color:var(--crit)}.halfp{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good-text)}
-.lng{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good-text)}.sht{background:color-mix(in srgb,var(--crit) 15%,transparent);color:var(--crit)}
-.note{color:var(--ink2)}
-.callout{background:color-mix(in srgb,var(--warn) 12%,transparent);border:1px solid color-mix(in srgb,var(--warn) 40%,var(--ring));border-radius:12px;padding:14px 16px;font-size:13.5px;margin-top:14px}
-.callout b{color:var(--ink)}.callout+.callout{margin-top:10px}.crit-callout{background:color-mix(in srgb,var(--crit) 10%,transparent);border-color:color-mix(in srgb,var(--crit) 35%,var(--ring))}
-.foot{color:var(--muted);font-size:12px;margin-top:22px;line-height:1.6}.chartwrap{position:relative}svg{display:block;width:100%;height:auto}
-.tt{position:absolute;pointer-events:none;background:var(--ink);color:var(--plane);font-size:12px;padding:6px 9px;border-radius:7px;transform:translate(-50%,-130%);white-space:nowrap;opacity:0;transition:opacity .08s}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;font-size:13px}.kv .k{color:var(--muted)}.kv .v{text-align:right;font-weight:600}
-.empty{color:var(--muted);font-size:13px;padding:18px;text-align:center}
-.costnote{font-size:11.5px;color:var(--ink2);background:rgba(120,120,120,.08);border:1px solid var(--ring);border-radius:8px;padding:6px 10px;margin:2px 0 10px;line-height:1.5}.costnote .cassume{display:block;color:var(--muted);font-size:10px;margin-top:3px}
-.topbar{position:sticky;top:8px;z-index:50;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 16px;background:var(--surface);border:1px solid var(--ring);border-radius:12px;padding:10px 16px;margin:0 0 12px;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:10px;margin:14px 0}
+.tile{background:var(--surface);border:1px solid var(--ring);border-radius:12px;padding:12px 14px}
+.tile .t{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px}
+.tile .v{font-size:22px;font-weight:650;letter-spacing:-.01em}
+/* sticky top bar */
+.topbar{position:sticky;top:8px;z-index:50;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 16px;background:var(--surface);border:1px solid var(--ring);border-radius:12px;padding:10px 16px;margin:0 0 10px;box-shadow:0 2px 14px rgba(0,0,0,.08)}
 .topbar .tb-l{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;color:var(--ink)}
 .topbar .dot{width:9px;height:9px;border-radius:50%;background:var(--good);display:inline-block;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .topbar .cd{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border:1px solid var(--ring);border-radius:999px;background:var(--plane);font-size:13px;color:var(--ink2);white-space:nowrap}
 .topbar .cd b{font-variant-numeric:tabular-nums;color:var(--blue);font-weight:800;font-size:17px;letter-spacing:.02em}
-.clockline{font-size:12px;color:var(--muted);margin:0 0 8px}.clockline #sc-clock{font-weight:600;color:var(--ink2)}</style></head><body><div class="wrap">
+.clockline{font-size:12px;color:var(--muted);margin:0 0 8px}.clockline #sc-clock{font-weight:600;color:var(--ink2)}
+/* collapsible explainer */
+.explain{margin:10px 0 4px;border:1px solid var(--ring);border-radius:12px;background:var(--surface);overflow:hidden}
+.explain summary{cursor:pointer;padding:11px 15px;font-size:13px;font-weight:600;color:var(--ink);list-style:none;display:flex;justify-content:space-between}
+.explain summary::-webkit-details-marker{display:none}.explain summary::after{content:'▾';color:var(--muted)}
+.explain[open] summary::after{content:'▴'}
+.explain #sc-explain{padding:0 15px 14px;font-size:12.5px;color:var(--ink2);line-height:1.55}
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:16px 0 6px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:12.5px;font-weight:600;padding:6px 13px;border-radius:999px;border:1px solid var(--ring);background:var(--surface);color:var(--ink2);cursor:pointer}
+.chip.on{background:var(--ink);color:var(--plane);border-color:var(--ink)}
+.tgl{font-size:12.5px;color:var(--ink2);display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none}
+/* table (grid rows) */
+.thead,.row{display:grid;grid-template-columns:minmax(150px,1.7fr) 92px 118px 84px minmax(104px,1fr) 92px 56px;gap:10px;align-items:center}
+.thead{padding:6px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;border-bottom:1px solid var(--grid)}
+.thead .r{text-align:right}.ths{cursor:pointer;user-select:none}.ths:hover{color:var(--ink2)}.ar{margin-left:3px;font-size:9px}
+.sech{display:flex;align-items:center;gap:8px;margin:18px 0 4px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--ink2)}
+.sech .cnt{color:var(--muted);font-weight:600}
+.dots{width:8px;height:8px;border-radius:50%}.d0{background:var(--good)}.d1{background:var(--blue)}.d2{background:var(--orange)}
+.row{padding:11px 14px;border-bottom:1px solid var(--grid);text-decoration:none;color:var(--ink);transition:background .1s}
+.row:hover{background:color-mix(in srgb,var(--blue) 7%,transparent)}
+.row.fade{opacity:.48}
+.row.isnew{background:color-mix(in srgb,var(--good) 7%,transparent)}
+.row.isnew:hover{background:color-mix(in srgb,var(--good) 13%,transparent)}
+.c-tk{display:flex;align-items:center;gap:10px;min-width:0}
+.mono{flex:none;width:31px;height:31px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;letter-spacing:.02em}
+.tkw{min-width:0}.sym{font-size:14px;font-weight:700}
+.new{font-size:9px;font-weight:800;color:var(--good-text);background:color-mix(in srgb,var(--good) 22%,transparent);padding:1px 5px;border-radius:5px;margin-left:6px;letter-spacing:.03em}
+.fadeb{font-size:9px;font-weight:700;color:var(--crit);background:color-mix(in srgb,var(--crit) 15%,transparent);padding:1px 5px;border-radius:5px;margin-left:6px}
+.nm{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.ixp{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:5px;margin:1px 3px 1px 0}
+.ix-sp{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good-text)}
+.ix-ndx{background:color-mix(in srgb,var(--blue) 16%,transparent);color:var(--blue)}
+.ix-dow{background:color-mix(in srgb,var(--orange) 16%,transparent);color:var(--orange)}
+.crp{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:5px}
+.cr0{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good-text)}
+.cr1{background:color-mix(in srgb,var(--blue) 16%,transparent);color:var(--blue)}
+.cr2{background:color-mix(in srgb,var(--orange) 16%,transparent);color:var(--orange)}
+.crd{display:block;font-size:10.5px;color:var(--muted);margin-top:2px}
+.c-sp{display:flex;flex-direction:column;gap:2px}.spk{width:68px;height:24px;display:block}
+.macdv{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+.c-st{min-width:0}.str{display:flex;flex-direction:column;gap:3px}
+.strv{font-size:12.5px;font-weight:700;color:var(--good-text);font-variant-numeric:tabular-nums}
+.strbar{display:block;height:5px;border-radius:3px;background:var(--grid);overflow:hidden;max-width:120px}
+.strbar i{display:block;height:100%;background:var(--good);border-radius:3px}
+.c-px{text-align:right}.last{display:block;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.chg{display:block;font-size:11.5px;font-weight:600;font-variant-numeric:tabular-nums}.chg.up{color:var(--good-text)}.chg.down{color:var(--crit)}
+.c-vol{text-align:right;font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.empty{padding:26px;text-align:center;color:var(--muted);font-size:13px}
+.foot{color:var(--muted);font-size:11.5px;margin-top:24px;line-height:1.6}
+@media (max-width:680px){
+  body{padding:14px 10px 50px}
+  .thead{display:none}
+  #sc-results .sech:first-child{margin-top:10px}
+  .row{grid-template-columns:1fr 1fr;gap:9px 12px;padding:13px 14px;border:1px solid var(--ring);border-radius:13px;margin:9px 0;background:var(--surface);box-shadow:0 1px 6px rgba(0,0,0,.05)}
+  .row:hover{background:var(--surface)}
+  .c-tk{grid-column:1/3}.c-ix{grid-column:1/3;margin-top:-2px}
+  .c-cr{order:5}.c-sp{order:6;align-items:flex-end}.c-st{order:7}.c-px{order:8;text-align:right}.c-vol{order:9;text-align:left;align-self:end}
+  .strbar{max-width:none}
+  .c-vol::before{content:'avg vol ';color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.03em}
+}
+</style></head><body><div class="wrap">
 <div class="topbar"><span class="tb-l"><span class="dot"></span>🔍 4h MACD Scanner</span><span class="cd">Next 4h candle in <b id="sc-countdown">—:—:—</b></span></div>
-<div class="clockline">🕒 <span id="sc-clock">—</span> · page auto-refreshes after each candle</div>
-<div class="rhead"><div><div class="sub" id="sc-sub"></div></div><div style="text-align:right"><span class="badge" id="sc-badge">● Scanner</span><div class="asof" id="sc-asof"></div></div></div>
-  <div class="tiles" id="sc-tiles"></div>
-  <div class="callout" id="sc-explain"></div>
-  <div class="sec">Matches — bullish MACD cross below the zero line (4h)</div>
-  <div class="card" style="padding:6px 8px"><table id="sc-tbl"><thead><tr><th>Ticker</th><th>Index</th><th>Cross</th><th class="r">MACD</th><th class="r">Signal</th><th class="r">Hist</th><th class="r">Last</th><th class="r">Day</th><th class="r">Avg vol</th></tr></thead><tbody></tbody></table></div>
-  <div class="foot" id="sc-foot"></div>
+<div class="clockline">🕒 <span id="sc-clock">—</span> · updates on its own after each candle</div>
+<div class="rhead"><div><div class="sub" id="sc-sub"></div></div><div style="text-align:right"><span class="badge" id="sc-badge">● Live scan</span><div class="asof" id="sc-asof"></div></div></div>
+<div class="tiles" id="sc-tiles"></div>
+<details class="explain"><summary>How to read this</summary><div id="sc-explain"></div></details>
+<div class="controls" id="sc-controls"></div>
+<div id="sc-results"></div>
+<div class="foot" id="sc-foot"></div>
 </div>
 <script>
-const SCAN={"meta":{"asOf":"Aug 6, 2026 \u00b7 11:38 PM ET \u2014 4h MACD, 5 fresh crosses","universe":516,"scanned":516,"hits":16},"rows":[{"macd":-2.815,"signal":-3.0228,"hist":0.2079,"bars_ago":0,"ticker":"TRGP","idx":["SP500"],"avg_vol":1169530,"last":268.39,"chg":3.18,"faded":false,"cross":"2026-08-06","name":"Targa Resources, Inc."},{"macd":-11.1282,"signal":-11.2244,"hist":0.0962,"bars_ago":0,"ticker":"CHRW","idx":["SP500"],"avg_vol":2512321,"last":146.66,"chg":-4.52,"faded":false,"cross":"2026-08-06","name":"C.H. Robinson Worldwide, Inc."},{"macd":-2.4997,"signal":-2.5889,"hist":0.0892,"bars_ago":0,"ticker":"BG","idx":["SP500"],"avg_vol":1392096,"last":108.99,"chg":2.22,"faded":false,"cross":"2026-08-06","name":"Bunge Limited"},{"macd":-10.9017,"signal":-10.9818,"hist":0.0801,"bars_ago":0,"ticker":"NXPI","idx":["NDX","SP500"],"avg_vol":4502076,"last":231.65,"chg":0.22,"faded":false,"cross":"2026-08-06","name":"NXP Semiconductors N.V."},{"macd":-1.3689,"signal":-1.3753,"hist":0.0064,"bars_ago":0,"ticker":"PNW","idx":["SP500"],"avg_vol":1247788,"last":100.84,"chg":-0.65,"faded":false,"cross":"2026-08-06","name":"Pinnacle West Capital Corporati"},{"macd":-4.6083,"signal":-7.401,"hist":2.7927,"bars_ago":1,"ticker":"LLY","idx":["SP500"],"avg_vol":2615789,"last":1192.8,"chg":1.96,"faded":false,"cross":"2026-08-06","name":"Eli Lilly and Company"},{"macd":-1.2491,"signal":-1.9776,"hist":0.7285,"bars_ago":1,"ticker":"LHX","idx":["SP500"],"avg_vol":1511883,"last":289.53,"chg":1.19,"faded":false,"cross":"2026-08-06","name":"L3Harris Technologies, Inc."},{"macd":-1.862,"signal":-2.3617,"hist":0.4997,"bars_ago":1,"ticker":"TMUS","idx":["NDX","SP500"],"avg_vol":4952003,"last":179.99,"chg":3.76,"faded":false,"cross":"2026-08-06","name":"T-Mobile US, Inc."},{"macd":-6.7455,"signal":-7.1891,"hist":0.4436,"bars_ago":1,"ticker":"LIN","idx":["NDX","SP500"],"avg_vol":2168989,"last":490.25,"chg":-0.16,"faded":false,"cross":"2026-08-06","name":"Linde plc"},{"macd":-0.5485,"signal":-0.87,"hist":0.3215,"bars_ago":1,"ticker":"PGR","idx":["SP500"],"avg_vol":2835527,"last":215.35,"chg":1.22,"faded":false,"cross":"2026-08-06","name":"Progressive Corporation (The)"},{"macd":-15.5682,"signal":-15.7998,"hist":0.2316,"bars_ago":1,"ticker":"ALNY","idx":["NDX"],"avg_vol":2474681,"last":216.02,"chg":-5.55,"faded":false,"cross":"2026-08-06","name":"Alnylam Pharmaceuticals, Inc."},{"macd":-0.3765,"signal":-0.4409,"hist":0.0643,"bars_ago":1,"ticker":"UBER","idx":["SP500"],"avg_vol":18737260,"last":70.49,"chg":3.39,"faded":false,"cross":"2026-08-06","name":"Uber Technologies, Inc."},{"macd":-1.5265,"signal":-2.3461,"hist":0.8196,"bars_ago":2,"ticker":"HLT","idx":["SP500"],"avg_vol":2158001,"last":321.95,"chg":-0.8,"faded":false,"cross":"2026-08-05","name":"Hilton Worldwide Holdings Inc."},{"macd":-0.8422,"signal":-0.9654,"hist":0.1231,"bars_ago":2,"ticker":"TXT","idx":["SP500"],"avg_vol":1754311,"last":87.9,"chg":-0.64,"faded":false,"cross":"2026-08-05","name":"Textron Inc."},{"macd":-0.1913,"signal":-0.2155,"hist":0.0242,"bars_ago":2,"ticker":"NKE","idx":["DOW","SP500"],"avg_vol":18349432,"last":41.99,"chg":-1.08,"faded":false,"cross":"2026-08-05","name":"Nike, Inc."},{"macd":-0.3323,"signal":-0.3169,"hist":-0.0153,"bars_ago":2,"ticker":"UDR","idx":["SP500"],"avg_vol":3430996,"last":38.17,"chg":-0.92,"faded":true,"cross":"2026-08-05","name":"UDR, Inc."}]};
-function renderScan(SC){const rows=SC.rows,m=SC.meta;
-document.getElementById('sc-sub').innerHTML='Bullish <b>MACD(12,26,9)</b> cross on <b>4-hour</b> bars while the MACD line is <b>below zero</b> — the classic oversold-and-turning-up trigger. Universe: <b>S&amp;P 500 + Nasdaq-100 + Dow</b>, filtered to <b>avg volume ≥ 1M</b> shares/day.';
-document.getElementById('sc-asof').textContent=m.asOf;
-const inSP=rows.filter(r=>r.idx.includes('SP500')).length,inND=rows.filter(r=>r.idx.includes('NDX')).length,inDW=rows.filter(r=>r.idx.includes('DOW')).length,fresh=rows.filter(r=>r.bars_ago===0).length;
-document.getElementById('sc-tiles').innerHTML=[['Matches',rows.length],['Crossed this bar',fresh],['In S&P 500',inSP],['In Nasdaq-100',inND],['In Dow',inDW],['Universe scanned',m.scanned]].map(t=>`<div class="tile"><div class="t">${t[0]}</div><div class="v num">${t[1]}</div></div>`).join('');
-document.getElementById('sc-explain').innerHTML='<b>How to read this.</b> Each name below had its 4-hour MACD line cross up through its signal line while still under zero — momentum turning up from an oversold/pullback state. Freshest crosses are listed first, then by histogram strength (how decisively the lines separated). MACD is computed on Robinhood\'s 4-hour bars, through the last completed 4h bar. <b>This is a watchlist signal, not a trade</b> — nothing here is bought. A negative day-change on a fresh cross (e.g. a gap-down after the cross printed) means the setup may already be invalidated — check the chart before acting.';
-const idxpill=a=>a.map(x=>{const lab=x==='SP500'?'S&P':x==='NDX'?'NDX':'DOW';const cl=x==='DOW'?'add':x==='NDX'?'buy':'halfp';return `<span class="pill ${cl}" style="margin-right:3px">${lab}</span>`;}).join('');
-const crosspill=r=>{const lab=r.bars_ago===0?'This bar':r.bars_ago+' bar'+(r.bars_ago>1?'s':'')+' ago';const cl=r.bars_ago===0?'halfp':r.bars_ago===1?'buy':'add';const d=new Date(r.cross+'T00:00:00');const ds=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});return `<span class="pill ${cl}">${lab}</span> <span class="note" style="font-size:11px">${ds}</span>`;};
-const fmtvol=v=>v>=1e6?(v/1e6).toFixed(v>=1e7?0:1)+'M':(v/1e3).toFixed(0)+'k';
-const fmtpx=p=>p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-const tb=document.querySelector('#sc-tbl tbody');
-tb.innerHTML=rows.map(r=>{const chgc=r.chg>=0?'up':'down';const hc=r.hist>=0?'var(--good-text)':'var(--crit)';
-return `<tr><td><span class="sym" style="font-size:14px">${r.ticker}</span>${r.faded?' <span class="pill sell" style="font-size:9.5px">faded</span>':''}<div class="meta">${r.name}</div></td><td>${idxpill(r.idx)}</td><td>${crosspill(r)}</td><td class="r num">${r.macd.toFixed(2)}</td><td class="r num">${r.signal.toFixed(2)}</td><td class="r num" style="color:${hc};font-weight:640">${r.hist>=0?'+':''}${r.hist.toFixed(2)}</td><td class="r num">$${fmtpx(r.last)}</td><td class="r num ${chgc}">${r.chg>=0?'+':''}${r.chg.toFixed(1)}%</td><td class="r num note">${fmtvol(r.avg_vol)}</td></tr>`;}).join('');
-document.getElementById('sc-foot').innerHTML='Signal: MACD(12,26,9) on 4h bars, bullish line/signal cross with MACD &lt; 0, cross within the last 3 bars. Filter: avg daily volume ≥ 1,000,000 shares; universe = current S&amp;P 500 + Nasdaq-100 + Dow 30 members ('+m.universe+' unique). Index membership from public constituent lists (may drift slightly between reconstitutions). Day-change vs prior close; prices intraday. Re-runs on every "update". <b>Watchlist only — no orders are placed.</b>';}
+const SCAN={"meta":{"asOf":"Aug 6, 2026 \u00b7 11:53 PM ET \u2014 4h MACD, 3 fresh crosses","universe":516,"scanned":516,"hits":14},"rows":[{"macd":-11.0029,"signal":-11.13,"hist":0.1271,"bars_ago":0,"spark":[0.6916,1.1184,1.2001,1.3086,0.8678,0.5295,0.0366,-0.0445,-0.3941,-0.7644,-2.1176,-2.7821,-2.4133,-2.315,-2.1954,-2.8193,-3.5426,-3.5177,-2.4773,-1.5037,-1.088,-0.7455,-0.215,0.1271],"ticker":"NXPI","idx":["NDX","SP500"],"avg_vol":3020602,"last":231.65,"chg":0.49,"faded":false,"cross":"2026-08-06","name":"NXP Semiconductors N.V.","is_new":false},{"macd":-11.1437,"signal":-11.2472,"hist":0.1035,"bars_ago":0,"spark":[0.4699,0.2248,-0.0526,-0.3134,-1.5402,-2.443,-3.5718,-4.2266,-4.6697,-4.7994,-4.8885,-4.1156,-5.1988,-5.4608,-5.1353,-4.7061,-4.2405,-3.5678,-2.5034,-1.477,-0.7307,-0.1196,-0.0066,0.1035],"ticker":"CHRW","idx":["SP500"],"avg_vol":2094515,"last":146.66,"chg":-4.52,"faded":false,"cross":"2026-08-06","name":"C.H. Robinson Worldwide, Inc.","is_new":false},{"macd":-2.4352,"signal":-2.4942,"hist":0.059,"bars_ago":0,"spark":[0.5139,0.5341,0.4431,0.2942,0.1365,-0.0159,-0.4071,-0.6369,-0.8795,-0.9004,-1.4063,-1.7517,-1.979,-2.105,-2.0587,-1.8594,-1.6701,-1.4636,-1.0894,-0.851,-0.6127,-0.4347,-0.1866,0.059],"ticker":"BG","idx":["SP500"],"avg_vol":1031368,"last":108.99,"chg":2.18,"faded":false,"cross":"2026-08-06","name":"Bunge Limited","is_new":false},{"macd":-4.5721,"signal":-7.3482,"hist":2.776,"bars_ago":1,"spark":[-1.8906,-1.6827,-0.1973,0.9268,2.7006,3.2849,3.6208,3.6191,4.7255,5.4221,5.2288,4.3374,0.5545,-2.4913,-5.0879,-6.1927,-8.7522,-9.4479,-8.8926,-8.8432,-5.2939,-2.3699,0.0411,2.776],"ticker":"LLY","idx":["SP500"],"avg_vol":2036207,"last":1192.8,"chg":2.06,"faded":false,"cross":"2026-08-06","name":"Eli Lilly and Company","is_new":false},{"macd":-1.1201,"signal":-1.7886,"hist":0.6685,"bars_ago":1,"spark":[-0.637,-0.2741,0.8909,1.6122,2.0468,2.206,2.4721,2.441,2.3824,2.2232,1.4911,0.9551,-1.4849,-2.5746,-2.792,-2.8055,-2.7048,-2.4078,-1.6584,-1.0387,-0.5933,-0.2122,0.3961,0.6685],"ticker":"LHX","idx":["SP500"],"avg_vol":1178444,"last":289.53,"chg":1.28,"faded":false,"cross":"2026-08-06","name":"L3Harris Technologies, Inc.","is_new":false},{"macd":-1.8414,"signal":-2.3315,"hist":0.4901,"bars_ago":1,"spark":[-0.123,-0.2656,-1.2129,-2.2305,-2.218,-2.0387,-1.7869,-1.7637,-1.2151,-0.9234,-0.7609,-0.5921,-0.8493,-1.0866,-1.2575,-1.2288,-0.8741,-0.5593,-0.3956,-0.1575,-0.2498,-0.2415,0.177,0.4901],"ticker":"TMUS","idx":["NDX","SP500"],"avg_vol":3788504,"last":179.99,"chg":3.75,"faded":false,"cross":"2026-08-06","name":"T-Mobile US, Inc.","is_new":false},{"macd":-6.7602,"signal":-7.2107,"hist":0.4505,"bars_ago":1,"spark":[-1.5969,-1.2885,-1.1261,-0.9633,-0.5824,-0.0706,-0.0054,0.0209,0.8016,0.833,0.6208,0.7031,0.3099,0.325,-1.5007,-2.5899,-3.133,-3.0985,-2.5894,-2.074,-1.2419,-0.5197,0.1523,0.4505],"ticker":"LIN","idx":["NDX","SP500"],"avg_vol":1528553,"last":490.25,"chg":-0.18,"faded":false,"cross":"2026-08-06","name":"Linde plc","is_new":false},{"macd":-0.5886,"signal":-0.9288,"hist":0.3402,"bars_ago":1,"spark":[-1.4686,-1.2852,-0.9702,-0.6227,0.0569,0.5555,1.0095,1.2634,1.7349,1.8656,1.9858,1.8853,1.2834,0.8817,0.5657,0.2493,-0.0244,-0.1867,-0.3142,-0.3065,-0.2238,-0.0736,0.1456,0.3402],"ticker":"PGR","idx":["SP500"],"avg_vol":2160173,"last":215.35,"chg":1.23,"faded":false,"cross":"2026-08-06","name":"Progressive Corporation (The)","is_new":false},{"macd":-15.534,"signal":-15.7496,"hist":0.2156,"bars_ago":1,"spark":[-1.9264,-1.6546,-1.2665,-0.8485,-0.1666,0.221,1.1829,1.5472,2.2292,2.7707,2.836,2.8635,-2.764,-5.7838,-7.5276,-7.9465,-7.0349,-5.715,-4.6628,-3.5141,-1.9508,-0.634,0.1868,0.2156],"ticker":"ALNY","idx":["NDX"],"avg_vol":2160993,"last":216.02,"chg":-5.5,"faded":false,"cross":"2026-08-06","name":"Alnylam Pharmaceuticals, Inc.","is_new":false},{"macd":-0.3805,"signal":-0.4466,"hist":0.0661,"bars_ago":1,"spark":[-0.2922,-0.3342,-0.4144,-0.4546,-0.4124,-0.5885,-0.5421,-0.4538,-0.286,-0.0708,0.0548,0.1929,0.1473,0.1986,0.2003,0.2281,0.3079,0.3609,0.3877,0.4092,0.0849,-0.0431,0.0074,0.0661],"ticker":"UBER","idx":["SP500"],"avg_vol":16035736,"last":70.49,"chg":3.39,"faded":false,"cross":"2026-08-06","name":"Uber Technologies, Inc.","is_new":false},{"macd":-1.5318,"signal":-2.3541,"hist":0.8223,"bars_ago":2,"spark":[0.3461,0.3929,0.0588,-0.006,0.3767,0.5418,0.7819,1.1926,0.7232,0.5472,0.2537,0.2086,0.234,0.2279,-0.0171,-0.0097,-0.4667,-0.6204,-0.7431,-0.8229,-0.134,0.4656,0.731,0.8223],"ticker":"HLT","idx":["SP500"],"avg_vol":1753925,"last":321.95,"chg":-0.83,"faded":false,"cross":"2026-08-05","name":"Hilton Worldwide Holdings Inc.","is_new":false},{"macd":-0.8094,"signal":-0.9173,"hist":0.1079,"bars_ago":2,"spark":[0.0835,0.0952,0.2352,0.2635,0.4291,0.4911,0.5572,0.5375,0.1355,-0.1681,-0.6309,-0.8978,-1.0128,-0.9489,-0.9353,-0.9186,-0.8597,-0.6965,-0.3982,-0.1601,-0.0365,0.05,0.0922,0.1079],"ticker":"TXT","idx":["SP500"],"avg_vol":1343012,"last":87.9,"chg":-0.58,"faded":false,"cross":"2026-08-05","name":"Textron Inc.","is_new":false},{"macd":-0.1834,"signal":-0.2039,"hist":0.0205,"bars_ago":2,"spark":[-0.1627,-0.1929,-0.2847,-0.3247,-0.2795,-0.2479,-0.1828,-0.1276,-0.0269,0.0387,0.0568,0.1043,0.0454,0.0334,-0.0128,-0.0371,-0.0173,0.0248,0.0025,-0.0321,-0.0384,0.0105,0.0221,0.0205],"ticker":"NKE","idx":["DOW","SP500"],"avg_vol":15102701,"last":41.99,"chg":-1.11,"faded":false,"cross":"2026-08-05","name":"Nike, Inc.","is_new":false},{"macd":-0.3268,"signal":-0.309,"hist":-0.0179,"bars_ago":2,"spark":[-0.111,-0.101,-0.0959,-0.0867,-0.0825,-0.0611,-0.0573,-0.0589,-0.0671,-0.0745,-0.0513,-0.0102,-0.078,-0.1102,-0.1506,-0.1487,-0.1166,-0.0742,-0.0579,-0.0343,-0.0063,0.0031,-0.0133,-0.0179],"ticker":"UDR","idx":["SP500"],"avg_vol":2535900,"last":38.17,"chg":-0.92,"faded":true,"cross":"2026-08-05","name":"UDR, Inc.","is_new":false}]};
+function fmtpx(p){return p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtvol(v){return v>=1e6?(v/1e6).toFixed(v>=1e7?0:1)+'M':(v/1e3).toFixed(0)+'k';}
+function mono(t){var h=0;for(var i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))>>>0;return '<span class="mono" style="background:hsl('+(h%360)+' 40% 40%)">'+t.slice(0,2)+'</span>';}
+function idxPills(a){return (a||[]).map(function(x){var lab=x==='SP500'?'S&P':x==='NDX'?'NDX':'DOW';var cl=x==='DOW'?'ix-dow':x==='NDX'?'ix-ndx':'ix-sp';return '<span class="ixp '+cl+'">'+lab+'</span>';}).join('');}
+function crossPill(r){var lab=r.bars_ago===0?'This candle':r.bars_ago+' ago';var cl='cr'+r.bars_ago;var d=new Date(r.cross+'T00:00:00');var ds=isNaN(d.getTime())?r.cross:d.toLocaleDateString('en-US',{month:'short',day:'numeric'});return '<span class="crp '+cl+'">'+lab+'</span><span class="crd">'+ds+'</span>';}
+function sparkSVG(a){if(!a||!a.length)return '';var W=68,H=24,n=a.length,g=1,bw=(W-(n-1)*g)/n,mid=H/2,mx=1;for(var j=0;j<n;j++){var av=Math.abs(a[j]);if(av>mx)mx=av;}var bars='';for(var i=0;i<n;i++){var v=a[i],x=i*(bw+g),hh=Math.max(1,Math.abs(v)/mx*(mid-1)),y=v>=0?mid-hh:mid;bars+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+hh.toFixed(1)+'" rx="0.8" fill="'+(v>=0?'var(--good)':'var(--crit)')+'" opacity="'+(i>=n-3?1:0.5)+'"/>';}return '<svg class="spk" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><line x1="0" y1="'+mid+'" x2="'+W+'" y2="'+mid+'" stroke="var(--axis)" stroke-width="0.6"/>'+bars+'</svg>';}
+function strengthBar(v,mx){var pct=Math.min(100,Math.abs(v)/(mx||1)*100);return '<div class="str"><span class="strv">'+(v>=0?'+':'')+v.toFixed(2)+'</span><span class="strbar"><i style="width:'+pct.toFixed(0)+'%"></i></span></div>';}
+function rowHTML(r,mx){var chg=r.chg>=0?'up':'down';var url='https://www.tradingview.com/symbols/'+encodeURIComponent(r.ticker)+'/';
+ return '<a class="row'+(r.faded?' fade':'')+(r.is_new?' isnew':'')+'" href="'+url+'" target="_blank" rel="noopener" title="Open '+r.ticker+' chart on TradingView">'
+ +'<div class="c-tk">'+mono(r.ticker)+'<div class="tkw"><span class="sym">'+r.ticker+'</span>'+(r.is_new?'<span class="new">NEW</span>':'')+(r.faded?'<span class="fadeb">faded</span>':'')+'<span class="nm">'+(r.name||r.ticker)+'</span></div></div>'
+ +'<div class="c-ix">'+idxPills(r.idx)+'</div>'
+ +'<div class="c-cr">'+crossPill(r)+'</div>'
+ +'<div class="c-sp">'+sparkSVG(r.spark)+'<span class="macdv">MACD '+r.macd.toFixed(2)+'</span></div>'
+ +'<div class="c-st">'+strengthBar(r.hist,mx)+'</div>'
+ +'<div class="c-px"><span class="last">$'+fmtpx(r.last)+'</span><span class="chg '+chg+'">'+(r.chg>=0?'+':'')+r.chg.toFixed(1)+'%</span></div>'
+ +'<div class="c-vol">'+fmtvol(r.avg_vol)+'</div></a>';}
+function renderScan(SC){
+ var rows=(SC.rows||[]).slice(), m=SC.meta||{};
+ document.getElementById('sc-sub').innerHTML='Bullish <b>MACD(12,26,9)</b> cross on <b>4-hour</b> bars while the line is <b>below zero</b> — oversold turning up. Universe: <b>S&amp;P 500 + Nasdaq-100 + Dow</b>, avg volume <b>&ge; 1M</b>/day.';
+ var asof=document.getElementById('sc-asof'); if(asof) asof.textContent=m.asOf||'';
+ var inSP=rows.filter(function(r){return r.idx.indexOf('SP500')>-1;}).length,inND=rows.filter(function(r){return r.idx.indexOf('NDX')>-1;}).length,inDW=rows.filter(function(r){return r.idx.indexOf('DOW')>-1;}).length,fresh=rows.filter(function(r){return r.bars_ago===0;}).length;
+ document.getElementById('sc-tiles').innerHTML=[['Matches',rows.length],['Fresh this candle',fresh],['In S&P 500',inSP],['In Nasdaq-100',inND],['In Dow',inDW],['Universe',m.scanned]].map(function(t){return '<div class="tile"><div class="t">'+t[0]+'</div><div class="v num">'+(t[1]!=null?t[1]:'—')+'</div></div>';}).join('');
+ document.getElementById('sc-explain').innerHTML='Each name below crossed its 4-hour MACD line up through its signal line while still <b>below zero</b> — momentum turning up from an oversold pullback. The <b>Trend</b> sparkline shows the recent histogram (red bars below the line, flipping green as it turns up); <b>Strength</b> is how decisively the lines separated. Freshest crosses are grouped at the top, and <span style="color:var(--good-text);font-weight:700">NEW</span> marks names that appeared since the last scan. <b>This is a watchlist, not a trade — nothing here is bought.</b> A red day-change on a fresh cross can mean it already gapped away. Tap any row to open its chart.';
+ var st={idx:'all',hideFaded:false,sortKey:'hist',sortDir:-1};
+ var chips=[['all','All'],['SP500','S&P 500'],['NDX','Nasdaq'],['DOW','Dow']];
+ document.getElementById('sc-controls').innerHTML='<div class="chips">'+chips.map(function(c){return '<button class="chip'+(c[0]==='all'?' on':'')+'" data-ix="'+c[0]+'">'+c[1]+'</button>';}).join('')+'</div><label class="tgl"><input type="checkbox" id="sc-hf"> Hide faded</label>';
+ function passes(r){return (st.idx==='all'||r.idx.indexOf(st.idx)>-1)&&(!st.hideFaded||!r.faded);}
+ function ind(k){return st.sortKey===k?'<span class="ar">'+(st.sortDir<0?'▼':'▲')+'</span>':'';}
+ function render(){
+   var fr=rows.filter(passes),mx=1;rows.forEach(function(r){if(Math.abs(r.hist)>mx)mx=Math.abs(r.hist);});
+   var html='<div class="thead"><div>Ticker</div><div>Index</div><div>Cross</div><div>Trend</div>'
+     +'<div class="ths" data-k="hist">Strength'+ind('hist')+'</div>'
+     +'<div class="ths r" data-k="chg">Price / Day'+ind('chg')+'</div>'
+     +'<div class="ths r" data-k="avg_vol">Vol'+ind('avg_vol')+'</div></div>';
+   var groups=[[0,'Crossed this candle'],[1,'One candle ago'],[2,'Two candles ago']],any=false;
+   groups.forEach(function(g){
+     var gr=fr.filter(function(r){return r.bars_ago===g[0];});
+     if(!gr.length)return; any=true;
+     gr.sort(function(a,b){return (a[st.sortKey]-b[st.sortKey])*st.sortDir;});
+     html+='<div class="sech"><span class="dots d'+g[0]+'"></span>'+g[1]+' <span class="cnt">'+gr.length+'</span></div>';
+     html+=gr.map(function(r){return rowHTML(r,mx);}).join('');
+   });
+   if(!any)html+='<div class="empty">No matches with these filters.</div>';
+   document.getElementById('sc-results').innerHTML=html;
+   Array.prototype.forEach.call(document.querySelectorAll('.ths'),function(el){el.onclick=function(){var k=el.dataset.k;if(st.sortKey===k)st.sortDir*=-1;else{st.sortKey=k;st.sortDir=-1;}render();};});
+ }
+ Array.prototype.forEach.call(document.querySelectorAll('.chip'),function(el){el.onclick=function(){st.idx=el.dataset.ix;Array.prototype.forEach.call(document.querySelectorAll('.chip'),function(x){x.classList.remove('on');});el.classList.add('on');render();};});
+ document.getElementById('sc-hf').onchange=function(e){st.hideFaded=e.target.checked;render();};
+ render();
+ document.getElementById('sc-foot').innerHTML='Signal: MACD(12,26,9) on 4h bars, bullish cross with MACD &lt; 0, within the last 3 candles. Data: Yahoo Finance. Filter: avg daily volume ≥ 1,000,000. Universe: current S&amp;P 500 + Nasdaq-100 + Dow ('+(m.universe||'')+' names). Watchlist only — no orders are placed. Re-scans after each 4h candle.';
+}
 renderScan(SCAN);
 (function(){
  function _p(n){return String(n).padStart(2,'0');}
- var F=4*3600*1000; // 4h in ms; UTC-aligned candle boundaries (…12:00,16:00,20:00 UTC)
- function tick(){var now=new Date();
-   var c=document.getElementById('sc-clock');
+ var F=4*3600*1000;
+ function tick(){var now=new Date();var c=document.getElementById('sc-clock');
    if(c)c.textContent=now.toLocaleString('en-US',{timeZone:'America/New_York',weekday:'short',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',second:'2-digit'})+' ET';
-   var ms=now.getTime(), nxt=Math.ceil((ms+1)/F)*F, d=Math.max(0,Math.round((nxt-ms)/1000));
-   var h=Math.floor(d/3600); d-=h*3600; var m=Math.floor(d/60), s=d-m*60;
-   var cd=document.getElementById('sc-countdown'); if(cd)cd.textContent=_p(h)+':'+_p(m)+':'+_p(s);
- }
- setInterval(tick,1000); tick();
- // live update: after each candle closes, poll for the freshly published scan and reload the instant it lands
- var BUILD_TS=1786073899;
+   var ms=now.getTime(),nxt=Math.ceil((ms+1)/F)*F,d=Math.max(0,Math.round((nxt-ms)/1000)),h=Math.floor(d/3600);d-=h*3600;var mm=Math.floor(d/60),s=d-mm*60;
+   var cd=document.getElementById('sc-countdown');if(cd)cd.textContent=_p(h)+':'+_p(mm)+':'+_p(s);}
+ setInterval(tick,1000);tick();
+ var BUILD_TS=1786074834;
  var target=Math.ceil((Date.now()+1)/F)*F;
- setInterval(function(){
-   var now=Date.now();
-   if(now<target) return;               // candle hasn't closed yet
+ setInterval(function(){var now=Date.now();if(now<target)return;
    fetch('build.json?t='+now,{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(b){
-     if(b&&b.ts&&b.ts>BUILD_TS){location.reload();}                       // new scan published -> reload now
-     else if(now>target+25*60*1000){target=Math.ceil((Date.now()+1)/F)*F;} // give up this candle, wait for next
+     if(b&&b.ts&&b.ts>BUILD_TS){location.reload();}
+     else if(now>target+25*60*1000){target=Math.ceil((Date.now()+1)/F)*F;}
    }).catch(function(){});
- },30000);
+ },15000);
 })();
 </script></body></html>
