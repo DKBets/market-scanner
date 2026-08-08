@@ -1,0 +1,29 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>MACD Score Backtest</title>
+<style>
+:root{color-scheme:light;--plane:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--ring:rgba(11,11,11,.10);--good:#006300;--crit:#d03b3b;--blue:#2a78d6}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;--plane:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--ring:rgba(255,255,255,.11);--good:#4fd24f;--crit:#e34948;--blue:#3987e5}}
+*{box-sizing:border-box}body{margin:0;background:var(--plane);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;padding:26px 16px 60px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:920px;margin:0 auto}h1{font-size:22px;margin:0 0 4px}.sub{color:var(--ink2);font-size:13px;margin-bottom:2px}
+.as{color:var(--muted);font-size:12px;margin-bottom:18px}
+.card{background:var(--surface);border:1px solid var(--ring);border-radius:14px;padding:18px 20px;margin:14px 0}
+.verdict{font-size:14.5px;line-height:1.6;color:var(--ink)}
+table{width:100%;border-collapse:collapse;margin-top:6px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:9px 8px;font-size:13px;border-bottom:1px solid var(--grid)}
+th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+td.lab,th:first-child{text-align:left;font-weight:700}td.n,th:nth-child(2){text-align:right;color:var(--ink2)}
+tr.ov td{border-top:2px solid var(--grid);font-weight:700;background:color-mix(in srgb,var(--blue) 6%,transparent)}
+.pos{color:var(--good);font-weight:700}.neg{color:var(--crit);font-weight:700}
+.win{display:block;font-size:10.5px;color:var(--muted);font-weight:500}
+td.na{color:var(--muted)}
+.foot{color:var(--muted);font-size:11.5px;margin-top:20px;line-height:1.6}
+a{color:var(--blue)}
+</style></head><body><div class="wrap">
+<h1>4h MACD — Score Backtest</h1>
+<div class="sub">Did a higher quality score actually mean a better outcome?</div>
+<div class="as">Aug 7, 2026 · 10:14 PM ET · 403 names · 14,549 signals · horizons in completed 4h candles</div>
+<div class="card verdict">Over +3 candles, top-tier (75–100) signals averaged <b>+0.07%</b> vs <b>+0.23%</b> for the weakest tier — a <b>-0.16%</b> spread. Across <b>14,549</b> historical bullish-below-zero crosses, the score showed a -0.016 correlation between score and the +3-candle return.</div>
+<div class="card"><table><thead><tr><th>Score tier</th><th>Signals</th><th>+1 candle</th><th>+2 candles</th><th>+3 candles</th><th>+6 candles</th><th>+10 candles</th></tr></thead>
+<tbody><tr class=""><td class="lab">75–100  strong</td><td class="n">6957</td><td><span class="neg">-0.03%</span><span class="win">51% win</span></td><td><span class="pos">+0.05%</span><span class="win">52% win</span></td><td><span class="pos">+0.07%</span><span class="win">53% win</span></td><td><span class="pos">+0.25%</span><span class="win">54% win</span></td><td><span class="pos">+0.37%</span><span class="win">54% win</span></td></tr><tr class=""><td class="lab">65–74  good</td><td class="n">4525</td><td><span class="pos">+0.05%</span><span class="win">52% win</span></td><td><span class="pos">+0.11%</span><span class="win">53% win</span></td><td><span class="pos">+0.17%</span><span class="win">54% win</span></td><td><span class="pos">+0.31%</span><span class="win">54% win</span></td><td><span class="pos">+0.35%</span><span class="win">54% win</span></td></tr><tr class=""><td class="lab">50–64  fair</td><td class="n">2675</td><td><span class="pos">+0.06%</span><span class="win">53% win</span></td><td><span class="pos">+0.12%</span><span class="win">54% win</span></td><td><span class="pos">+0.16%</span><span class="win">56% win</span></td><td><span class="pos">+0.30%</span><span class="win">57% win</span></td><td><span class="pos">+0.46%</span><span class="win">57% win</span></td></tr><tr class=""><td class="lab">0–49  weak</td><td class="n">392</td><td><span class="pos">+0.08%</span><span class="win">52% win</span></td><td><span class="pos">+0.14%</span><span class="win">53% win</span></td><td><span class="pos">+0.23%</span><span class="win">56% win</span></td><td><span class="neg">-0.04%</span><span class="win">51% win</span></td><td><span class="pos">+0.06%</span><span class="win">53% win</span></td></tr><tr class="ov"><td class="lab">All signals</td><td class="n">14549</td><td><span class="pos">+0.01%</span><span class="win">52% win</span></td><td><span class="pos">+0.08%</span><span class="win">53% win</span></td><td><span class="pos">+0.12%</span><span class="win">54% win</span></td><td><span class="pos">+0.27%</span><span class="win">54% win</span></td><td><span class="pos">+0.37%</span><span class="win">54% win</span></td></tr></tbody></table></div>
+<div class="foot">Each row: average forward return of the stock N completed 4-hour candles after the cross, and the share of signals that were positive (“win”). Score is computed only from data available at the cross — no look-ahead. Universe: S&amp;P 500 + Nasdaq-100 + Dow, avg volume ≥ 1M/day, ~2 years of Yahoo 4h bars. Past behavior is not a promise of future results; this is watchlist research, not advice. <a href="./">← back to the scanner</a></div>
+</div></body></html>
