@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>MACD Factor Research</title>
+<style>
+:root{color-scheme:light;--plane:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--ring:rgba(11,11,11,.10);--good:#006300;--crit:#d03b3b;--blue:#2a78d6}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;--plane:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--ring:rgba(255,255,255,.11);--good:#4fd24f;--crit:#e34948;--blue:#3987e5}}
+*{box-sizing:border-box}body{margin:0;background:var(--plane);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;padding:26px 16px 60px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:900px;margin:0 auto}h1{font-size:22px;margin:0 0 4px}h2{font-size:15px;margin:22px 0 2px}
+.sub{color:var(--ink2);font-size:13px}.as{color:var(--muted);font-size:12px;margin-bottom:16px}
+.card{background:var(--surface);border:1px solid var(--ring);border-radius:14px;padding:16px 20px;margin:12px 0}
+.verdict{font-size:14.5px;line-height:1.6}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:9px 8px;font-size:13px;border-bottom:1px solid var(--grid)}
+th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+td.lab,th:first-child{text-align:left;font-weight:700}td.n{color:var(--ink2);font-size:12px}
+.pos{color:var(--good);font-weight:700}.neg{color:var(--crit);font-weight:700}
+.win{display:block;font-size:10.5px;color:var(--muted);font-weight:500}
+.foot{color:var(--muted);font-size:11.5px;margin-top:20px;line-height:1.6}a{color:var(--blue)}
+</style></head><body><div class="wrap">
+<h1>4h MACD — Factor Research</h1>
+<div class="sub">Does the signal beat a random entry, and does any single factor predict the excess?</div>
+<div class="as">Aug 7, 2026 · 10:26 PM ET · 403 names · 14,424 signals</div>
+<div class="card verdict">The cross's excess over random entry is <b>+0.032%</b> at +3 candles; the most predictive factor is <b>Volume surge</b> with a -0.146% top-vs-bottom quintile spread. Worth rebuilding the score around it.</div>
+<h2>1 · Signal edge vs random entry</h2>
+<div class="sub">Average <b>excess</b> return over the same stock's all-candle average (drift removed). Positive = the cross beats a coin-flip entry.</div>
+<div class="card"><table><thead><tr><th>Benchmark</th><th>+3 candles</th><th>+6 candles</th><th>+10 candles</th></tr></thead>
+<tbody><tr><td class="lab">Cross vs random entry</td><td><span class="pos">+0.032%</span><span class="win">52% beat random</span></td><td><span class="pos">+0.097%</span><span class="win">52% beat random</span></td><td><span class="pos">+0.073%</span><span class="win">52% beat random</span></td></tr></tbody></table></div>
+<h2>2 · Which factor predicts the excess?</h2>
+<div class="sub">Correlation with the +3-candle excess, and the top-minus-bottom quintile spread (higher-factor fifth vs lower-factor fifth).</div>
+<div class="card"><table><thead><tr><th>Factor</th><th>Corr (+3)</th><th>Q5−Q1 spread</th><th>bottom → top fifth</th></tr></thead>
+<tbody><tr><td class="lab">RSI (lower = oversold)</td><td><span class="neg">-0.007</span></td><td><span class="pos">+0.007%</span></td><td class="n">+0.055% → +0.062%</td></tr><tr><td class="lab">Volume surge</td><td><span class="neg">-0.036</span></td><td><span class="neg">-0.146%</span></td><td class="n">+0.099% → -0.047%</td></tr><tr><td class="lab">Oversold depth</td><td><span class="pos">+0.003</span></td><td><span class="neg">-0.038%</span></td><td class="n">+0.057% → +0.020%</td></tr><tr><td class="lab">Momentum slope</td><td><span class="neg">-0.006</span></td><td><span class="neg">-0.024%</span></td><td class="n">-0.031% → -0.055%</td></tr><tr><td class="lab">Trend (vs 50-SMA %)</td><td><span class="neg">-0.017</span></td><td><span class="pos">+0.004%</span></td><td class="n">+0.118% → +0.122%</td></tr></tbody></table></div>
+<div class="foot">Excess return = signal's forward return minus that stock's average forward return over all candles, so each stock's own drift is removed. 14,424 signals across 403 names, ~2y of Yahoo 4h bars. A real edge shows a positive excess AND at least one factor with a monotonic, non-trivial quintile spread. Research only — not advice. <a href="./">← scanner</a> · <a href="backtest.html">tier backtest</a></div>
+</div></body></html>
